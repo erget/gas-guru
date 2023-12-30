@@ -59,6 +59,45 @@ def find_depth_for_30m_end(n2_percentage):
     return depth
 
 
+def calculate_depth_for_gas_density(o2_percentage, he_percentage, target_density):
+    """
+    Calculate the depth at which a given target gas density is reached for a specific gas mix.
+    Corroborated by https://gue.com/blog/density-discords-understanding-and-applying-gas-density-research/
+
+    Parameters:
+    o2_percentage (float): Percentage of oxygen in the gas mix.
+    he_percentage (float): Percentage of helium in the gas mix.
+    target_density (float): Target gas density in g/l.
+
+    Returns:
+    float: Depth in meters at which the target gas density is reached.
+    """
+    # Specific gravities of gases at standard conditions (g/l)
+    specific_gravity_o2 = 1.429
+    specific_gravity_n2 = 1.2506
+    specific_gravity_he = 0.1786
+
+    # Convert percentages to fractions
+    frac_o2 = o2_percentage / 100
+    frac_he = he_percentage / 100
+    frac_n2 = 1 - frac_o2 - frac_he
+
+    # Initialize depth
+    depth = 0
+
+    # Increment depth until the target density is reached or exceeded
+    while True:
+        total_pressure = 1 + depth / 10  # Total pressure at depth (in ATA)
+        density = total_pressure * (
+                    frac_o2 * specific_gravity_o2 + frac_n2 * specific_gravity_n2 + frac_he * specific_gravity_he)
+
+        if density >= target_density:
+            break
+        depth += 1
+
+    return depth
+
+
 
 if __name__ == '__main__':
     # Check if the trimix specification is provided as a command line argument
@@ -81,6 +120,11 @@ if __name__ == '__main__':
         print(
             f"With a {o2_percentage}% O2 mix, a PO2 of {po2} bar is achieved at a depth of {depth:.2f} meters.")
 
-    # Example usage
     depth_for_30m_end = find_depth_for_30m_end(n2_percentage)
     print(f"With {n2_percentage}% N2 in the mix, the depth at which END is 30 meters is {depth_for_30m_end:.2f} meters.")
+
+    target_densities = [5.2, 6.2]  # Limits in g/l
+    for target_density in target_densities:
+        depth_for_soft_limit = calculate_depth_for_gas_density(o2_percentage, he_percentage, target_density)
+        print(
+            f"With {o2_percentage}% O2 and {he_percentage}% He, the depth for {target_density} g/l gas density is {depth_for_soft_limit} meters.")
