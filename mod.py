@@ -26,6 +26,7 @@ def parse_trimix(trimix):
 
     return o2, he, n2
 
+
 def calculate_depth_for_po2(target_po2, oxygen_percentage):
     """
     Calculate the depth at which a given target PO2 is achieved with a specific oxygen percentage in the gas mix.
@@ -44,7 +45,7 @@ def calculate_depth_for_po2(target_po2, oxygen_percentage):
 
 def find_depth_for_30m_end(n2_percentage):
     """
-    Calculate the depth at which the Equivalent Narcotic Depth (END) is 30 meters for a given nitrogen percentage in the gas mix.
+    Calculate the depth at which the Equivalent Narcotic Depth (END) is 30m for a given nitrogen percentage in the mix.
 
     Parameters:
     n2_percentage (float): Percentage of nitrogen in the gas mix.
@@ -58,10 +59,12 @@ def find_depth_for_30m_end(n2_percentage):
     depth = (target_ppn2_air_30m / frac_n2_mix - 1) * 10
     return depth
 
+
 # Specific gravities of gases at standard conditions (g/l)
 SPECIFIC_GRAVITY_O2 = 1.429
 SPECIFIC_GRAVITY_N2 = 1.2506
 SPECIFIC_GRAVITY_HE = 0.1786
+
 
 def calculate_depth_for_gas_density(o2_percentage, he_percentage, target_density):
     """
@@ -98,9 +101,10 @@ def calculate_depth_for_gas_density(o2_percentage, he_percentage, target_density
     return depth
 
 
-def calculate_depth_for_sp_and_density(initial_o2_percentage, initial_he_percentage, initial_n2_percentage, set_point, target_density):
+def calculate_depth_for_sp_and_density(initial_o2_percentage, initial_he_percentage, initial_n2_percentage, set_point,
+                                       target_density):
     """
-    Calculate the depth at which a given target gas density is reached for a specific gas mix adjusted to a set point (SP),
+    Calculate the depth at which a given target gas density is reached for a specific mix adjusted to a set point (SP),
     starting from an initial depth of 10 meters.
 
     Parameters:
@@ -130,7 +134,8 @@ def calculate_depth_for_sp_and_density(initial_o2_percentage, initial_he_percent
         frac_n2 = initial_n2_percentage / 100 * total_he_n2
 
         # Calculate gas density of current gas composition
-        density = ambient_pressure * (frac_o2 * SPECIFIC_GRAVITY_O2 + frac_n2 * SPECIFIC_GRAVITY_N2 + frac_he * SPECIFIC_GRAVITY_HE)
+        density = ambient_pressure * (
+                    frac_o2 * SPECIFIC_GRAVITY_O2 + frac_n2 * SPECIFIC_GRAVITY_N2 + frac_he * SPECIFIC_GRAVITY_HE)
 
         # Check if the gas density exceeds the target density
         if density >= target_density:
@@ -141,7 +146,6 @@ def calculate_depth_for_sp_and_density(initial_o2_percentage, initial_he_percent
 
     # Return the depth if the loop exits (which should not normally happen)
     return depth
-
 
 
 if __name__ == '__main__':
@@ -166,16 +170,19 @@ if __name__ == '__main__':
             f"With a {o2_percentage}% O2 mix, a PO2 of {po2} bar is achieved at a depth of {depth:.2f} meters.")
 
     depth_for_30m_end = find_depth_for_30m_end(n2_percentage)
-    print(f"With {n2_percentage}% N2 in the mix, the depth at which END is 30 meters is {depth_for_30m_end:.2f} meters.")
+    print(
+        f"With {n2_percentage}% N2 in the mix, the depth at which END is 30 meters is {depth_for_30m_end:.2f} meters.")
 
     target_densities = [5.2, 6.2]  # Hard nd soft limits in g/l
     for target_density in target_densities:
         depth_for_limit = calculate_depth_for_gas_density(o2_percentage, he_percentage, target_density)
         print(
-            f"With {o2_percentage}% O2 and {he_percentage}% He, the depth for {target_density} g/l gas density is {depth_for_limit} meters on OC.")
+            f"With {o2_percentage}% O2 and {he_percentage}% He, the depth for {target_density} g/l gas density is ",
+            "{depth_for_limit} meters on OC.")
         # Now for OC
         for setpoint in [1.0, 1.1, 1.2, 1.3]:
-            depth_for_limit = calculate_depth_for_sp_and_density(o2_percentage, he_percentage, n2_percentage, setpoint, target_density)
+            depth_for_limit = calculate_depth_for_sp_and_density(o2_percentage, he_percentage, n2_percentage, setpoint,
+                                                                 target_density)
             print(
                 f"With SP {setpoint} the depth for {target_density} g/l is {depth_for_limit}."
             )
