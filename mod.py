@@ -167,18 +167,17 @@ if __name__ == '__main__':
     for po2 in targets_po2:
         depth = calculate_depth_for_po2(po2, o2_percentage)
         print(
-            f"With a {o2_percentage}% O2 mix, a PO2 of {po2} bar is achieved at a depth of {depth:.2f} meters.")
+            f"PO2 of {po2} bar at {depth:.2f} meters.")
 
     depth_for_30m_end = find_depth_for_30m_end(n2_percentage)
     print(
-        f"With {n2_percentage}% N2 in the mix, the depth at which END is 30 meters is {depth_for_30m_end:.2f} meters.")
+        f"END is 30 meters at {depth_for_30m_end:.2f} meters.")
 
     target_densities = [5.2, 6.2]  # Hard nd soft limits in g/l
     for target_density in target_densities:
         depth_for_limit = calculate_depth_for_gas_density(o2_percentage, he_percentage, target_density)
         print(
-            f"With {o2_percentage}% O2 and {he_percentage}% He, the depth for {target_density} g/l gas density is ",
-            "{depth_for_limit} meters on OC.")
+            f"Depth for {target_density} g/l gas density is {depth_for_limit} meters on OC.")
         # Now for OC
         for setpoint in [1.0, 1.1, 1.2, 1.3]:
             depth_for_limit = calculate_depth_for_sp_and_density(o2_percentage, he_percentage, n2_percentage, setpoint,
