@@ -123,8 +123,8 @@ if __name__ == '__main__':
     depth_for_30m_end = find_depth_for_30m_end(n2_percentage)
     print(f"With {n2_percentage}% N2 in the mix, the depth at which END is 30 meters is {depth_for_30m_end:.2f} meters.")
 
-    target_densities = [5.2, 6.2]  # Limits in g/l
+    target_densities = [5.2, 6.2]  # Hard nd soft limits in g/l
     for target_density in target_densities:
         depth_for_soft_limit = calculate_depth_for_gas_density(o2_percentage, he_percentage, target_density)
         print(
-            f"With {o2_percentage}% O2 and {he_percentage}% He, the depth for {target_density} g/l gas density is {depth_for_soft_limit} meters.")
+            f"With {o2_percentage}% O2 and {he_percentage}% He, the depth for {target_density} g/l gas density is {depth_for_soft_limit} meters on OC.")
