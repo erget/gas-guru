@@ -42,6 +42,24 @@ def calculate_depth_for_po2(target_po2, oxygen_percentage):
     return depth
 
 
+def find_depth_for_30m_end(n2_percentage):
+    """
+    Calculate the depth at which the Equivalent Narcotic Depth (END) is 30 meters for a given nitrogen percentage in the gas mix.
+
+    Parameters:
+    n2_percentage (float): Percentage of nitrogen in the gas mix.
+
+    Returns:
+    float: Depth in meters at which the END is 30 meters.
+    """
+    frac_n2_mix = n2_percentage / 100  # Fraction of N2 in the mix
+    target_ppn2_air_30m = 0.79 * 4  # PPN2 when breathing air at 30 meters
+
+    depth = (target_ppn2_air_30m / frac_n2_mix - 1) * 10
+    return depth
+
+
+
 if __name__ == '__main__':
     # Check if the trimix specification is provided as a command line argument
     if len(sys.argv) != 2:
@@ -62,3 +80,7 @@ if __name__ == '__main__':
         depth = calculate_depth_for_po2(po2, o2_percentage)
         print(
             f"With a {o2_percentage}% O2 mix, a PO2 of {po2} bar is achieved at a depth of {depth:.2f} meters.")
+
+    # Example usage
+    depth_for_30m_end = find_depth_for_30m_end(n2_percentage)
+    print(f"With {n2_percentage}% N2 in the mix, the depth at which END is 30 meters is {depth_for_30m_end:.2f} meters.")
